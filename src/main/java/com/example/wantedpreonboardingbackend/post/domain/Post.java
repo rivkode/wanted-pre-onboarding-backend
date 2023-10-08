@@ -1,10 +1,7 @@
-package com.example.wantedpreonboardingbackend.post;
+package com.example.wantedpreonboardingbackend.post.domain;
 
 import com.example.wantedpreonboardingbackend.company.Company;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -26,11 +23,23 @@ public class Post {
 
     private String position;
 
-    private String reward;
+    private int reward;
 
-    private String requiredSkills;
+    private String skills;
 
     private String country;
 
     private String region;
+
+    @Builder
+    private Post(Company company, String content, String position, int reward, String skills, String country,
+                 String region) {
+        this.company = company;
+        this.content = content;
+        this.position = position;
+        this.reward = reward;
+        this.skills = skills;
+        this.country = country;
+        this.region = region;
+    }
 }
