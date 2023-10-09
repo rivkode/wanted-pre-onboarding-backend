@@ -44,7 +44,7 @@ public class PostController {
         }
     }
 
-    @PutMapping(value = "/post", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/post", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<?>> updatePost(@Valid @RequestBody UpdatePostRequest request) {
         int UPDATE_POST = 0;
 
@@ -55,4 +55,17 @@ public class PostController {
             throw new CustomException(ErrorCode.SERVER_ERROR);
         }
     }
+
+    @DeleteMapping(value = "/post/{postId}")
+    public ResponseEntity<ApiResponse<?>> deletePost(@PathVariable("postId") Long postId) {
+        int DELETE_POST = 0;
+
+        int result = postService.deletePost(postId);
+        if (result == DELETE_POST) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(success(SuccessCode.DELETE_POST));
+        } else {
+            throw new CustomException(ErrorCode.SERVER_ERROR);
+        }
+    }
+
 }

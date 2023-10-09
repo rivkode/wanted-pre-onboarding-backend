@@ -1,6 +1,8 @@
 package com.example.wantedpreonboardingbackend.post.application;
 
 import com.example.wantedpreonboardingbackend.company.Company;
+import com.example.wantedpreonboardingbackend.exception.CustomException;
+import com.example.wantedpreonboardingbackend.exception.ErrorCode;
 import com.example.wantedpreonboardingbackend.post.dao.PostRepository;
 import com.example.wantedpreonboardingbackend.post.domain.Post;
 import com.example.wantedpreonboardingbackend.post.dto.request.CreatePostRequest;
@@ -41,7 +43,7 @@ public class PostService {
                 // 추후 예외 처리
             }
         } else {
-
+            throw new CustomException(ErrorCode.INFO_NOT_EXIST);
         }
         return DELETE_POST;
     }
@@ -58,12 +60,14 @@ public class PostService {
                 postOptional.get().setSkills(request.getSkills());
                 postOptional.get().setCountry(request.getCountry());
                 postOptional.get().setRegion(request.getRegion());
-                log.info("수정된 content : {}",postOptional.get().getContent());
-                log.info("수정된 skills : {}",postOptional.get().getSkills());
+                log.info("수정된 content : {}", postOptional.get().getContent());
+                log.info("수정된 skills : {}", postOptional.get().getSkills());
                 postRepository.save(postOptional.get());
             } catch (Exception e) {
                 // 추후 예외 처리
             }
+        } else {
+            throw new CustomException(ErrorCode.INFO_NOT_EXIST);
         }
         return UPDATE_POST;
     }
