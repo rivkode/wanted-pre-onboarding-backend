@@ -9,6 +9,7 @@ import com.example.wantedpreonboardingbackend.exception.SuccessCode;
 import com.example.wantedpreonboardingbackend.post.application.PostService;
 import com.example.wantedpreonboardingbackend.post.dto.request.CreatePostRequest;
 import com.example.wantedpreonboardingbackend.post.dto.request.UpdatePostRequest;
+import com.example.wantedpreonboardingbackend.post.dto.response.PostResponse;
 import com.example.wantedpreonboardingbackend.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static com.example.wantedpreonboardingbackend.common.dto.ApiResponse.success;
 
@@ -50,7 +53,7 @@ public class PostController {
 
         int result = postService.updatePost(request.getPostId(), request);
         if (result == UPDATE_POST) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(success(SuccessCode.UPDATE_POST));
+            return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.UPDATE_POST));
         } else {
             throw new CustomException(ErrorCode.SERVER_ERROR);
         }
@@ -66,6 +69,12 @@ public class PostController {
         } else {
             throw new CustomException(ErrorCode.SERVER_ERROR);
         }
+    }
+
+    @GetMapping(value = "/post/list")
+    public ResponseEntity<ApiResponse<List<PostResponse>>> getAllPosts() {
+
+        return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.LOAD_POST, postService.getAllPosts()));
     }
 
 }

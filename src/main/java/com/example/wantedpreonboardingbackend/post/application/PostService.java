@@ -7,11 +7,14 @@ import com.example.wantedpreonboardingbackend.post.dao.PostRepository;
 import com.example.wantedpreonboardingbackend.post.domain.Post;
 import com.example.wantedpreonboardingbackend.post.dto.request.CreatePostRequest;
 import com.example.wantedpreonboardingbackend.post.dto.request.UpdatePostRequest;
+import com.example.wantedpreonboardingbackend.post.dto.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -70,5 +73,17 @@ public class PostService {
             throw new CustomException(ErrorCode.INFO_NOT_EXIST);
         }
         return UPDATE_POST;
+    }
+
+    public List<PostResponse> getAllPosts() {
+        List<PostResponse> postResponseList = new ArrayList<>();
+        List<Post> posts = postRepository.findAll();
+
+        for (Post p : posts) {
+            postResponseList.add(PostResponse.from(p));
+        }
+
+        return postResponseList;
+
     }
 }
