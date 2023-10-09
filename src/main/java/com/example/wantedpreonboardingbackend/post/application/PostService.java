@@ -77,6 +77,20 @@ public class PostService {
         return UPDATE_POST;
     }
 
+    public PostResponse getPostDetail(Long postId, Long companyId) {
+        Optional<Post> postOptional = postRepository.findById(postId);
+        List<Long> postIds = postRepository.findPostIdsByCompanyId(companyId);
+
+
+        if (postOptional.isPresent()) {
+            PostResponse postResponse = PostResponse.detailFrom(postOptional.get(), postIds);
+            return postResponse;
+        } else {
+            throw new CustomException(ErrorCode.DATA_NOT_EXIT);
+        }
+
+    }
+
     public List<PostResponse> getAllPosts() {
         List<PostResponse> postResponseList = new ArrayList<>();
         List<Post> posts = postRepository.findAll();

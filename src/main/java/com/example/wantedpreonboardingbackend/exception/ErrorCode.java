@@ -11,7 +11,8 @@ public enum ErrorCode {
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C001", "서버 내부 오류"),
 
     // post
-    INFO_NOT_EXIST(HttpStatus.BAD_REQUEST, "P001", "요청된 정보가 부족합니다");
+    INFO_NOT_EXIST(HttpStatus.BAD_REQUEST, "P001", "요청된 정보가 부족합니다"),
+    DATA_NOT_EXIT(HttpStatus.BAD_REQUEST, "P002", "요청된 데이터가 존재하지 않습니다");
 
     private final HttpStatus httpStatus;
     private final String type;

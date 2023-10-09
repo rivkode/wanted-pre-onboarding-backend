@@ -86,4 +86,10 @@ public class PostController {
         }
     }
 
+    @GetMapping(value = "/post/{postId}")
+    public ResponseEntity<ApiResponse<?>> getOnePost(@PathVariable("postId") Long postId, @RequestParam("companyId") Long companyId) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.LOAD_POST, postService.getPostDetail(postId, companyId)));
+    }
+
 }
