@@ -31,6 +31,30 @@ public class Post {
 
     private String region;
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public void setReward(int reward) {
+        this.reward = reward;
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
     @Builder
     private Post(Company company, String content, String position, int reward, String skills, String country,
                  String region) {
