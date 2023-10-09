@@ -28,7 +28,10 @@ public enum SuccessCode {
     /**
      * 204 NO_CONTENT status
      */
-    DELETE_POST(HttpStatus.NO_CONTENT.value(), "공고 삭제에 성공하였습니다");
+    DELETE_POST(HttpStatus.NO_CONTENT.value(), "공고 삭제에 성공하였습니다"),
+
+    // apply
+    CREATE_APPLY(HttpStatus.CREATED.value(), "지원에 성공하였습니다");
 
 
 

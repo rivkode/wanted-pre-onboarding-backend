@@ -1,11 +1,9 @@
 package com.example.wantedpreonboardingbackend.apply;
 
 import com.example.wantedpreonboardingbackend.company.Company;
+import com.example.wantedpreonboardingbackend.post.domain.Post;
 import com.example.wantedpreonboardingbackend.user.User;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -23,10 +21,20 @@ public class Apply {
     @JoinColumn(name = "user_id")
     private User user;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "company_id")
+//    private Company company;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @Enumerated(EnumType.STRING)
     private ApplyStatus status;
+
+    @Builder
+    private Apply(User user, Post post) {
+        this.user = user;
+        this.post = post;
+    }
 }
