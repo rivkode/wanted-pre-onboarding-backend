@@ -25,12 +25,13 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
 
-    @Transactional
     public int createPost(Company company, CreatePostRequest request) {
         int CREATE_POST = 0;
 
         try {
+            log.info("service request skills {}", request.getSkills());
             postRepository.save(request.toEntity(company));
+            log.info("save complete");
         } catch (Exception e) {
             // 추후 예외 처리
         }
@@ -58,23 +59,27 @@ public class PostService {
 
         Optional<Post> postOptional = postRepository.findById(request.getPostId());
         if (postOptional.isPresent()) {
-            try {
-                postOptional.get().setContent(request.getContent());
-                postOptional.get().setPosition(request.getPosition());
-                postOptional.get().setReward(request.getReward());
-                postOptional.get().setSkills(request.getSkills());
-                postOptional.get().setCountry(request.getCountry());
-                postOptional.get().setRegion(request.getRegion());
-                log.info("수정된 content : {}", postOptional.get().getContent());
-                log.info("수정된 skills : {}", postOptional.get().getSkills());
-                postRepository.save(postOptional.get());
-            } catch (Exception e) {
-                // 추후 예외 처리
-            }
+            setPost(request, postOptional.get());
         } else {
             throw new CustomException(ErrorCode.INFO_NOT_EXIST);
         }
         return UPDATE_POST;
+    }
+
+    public void setPost(UpdatePostRequest request, Post post) {
+        try {
+            post.setContent(request.getContent());
+            post.setPosition(request.getPosition());
+            post.setReward(request.getReward());
+            post.setSkills(request.getSkills());
+            post.setCountry(request.getCountry());
+            post.setRegion(request.getRegion());
+            log.info("수정된 content : {}", post.getContent());
+            log.info("수정된 skills : {}", post.getSkills());
+            postRepository.save(post);
+        } catch (Exception e) {
+            // 추후 예외 처리
+        }
     }
 
     public PostResponse getPostDetail(Long postId, Long companyId) {

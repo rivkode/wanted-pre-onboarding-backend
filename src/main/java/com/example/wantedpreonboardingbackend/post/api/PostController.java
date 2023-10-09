@@ -39,7 +39,9 @@ public class PostController {
         int CREATE_POST = 0;
 
         Company company = companyService.getCompany(request.getCompanyId());
+        log.info("request content : {}", request.getContent());
         int result = postService.createPost(company, request);
+        log.info("postService Create result : {}", result);
         if (result == CREATE_POST) {
             return ResponseEntity.status(HttpStatus.CREATED).body(success(SuccessCode.CREATE_POST));
         } else {
@@ -87,7 +89,7 @@ public class PostController {
     }
 
     @GetMapping(value = "/post/{postId}")
-    public ResponseEntity<ApiResponse<?>> getOnePost(@PathVariable("postId") Long postId, @RequestParam("companyId") Long companyId) {
+    public ResponseEntity<ApiResponse<?>> getPostDetail(@PathVariable("postId") Long postId, @RequestParam("companyId") Long companyId) {
 
         return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.LOAD_POST, postService.getPostDetail(postId, companyId)));
     }
