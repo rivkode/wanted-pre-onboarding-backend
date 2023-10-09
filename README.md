@@ -10,6 +10,26 @@
 
 ✔️ 테스트코드를 통해 메서드의 의도를 나타내도록 합니다.
 
+## Directory Architecture
+
+- src
+  - main
+    - apply
+    - common
+    - company
+    - config
+    - exception
+    - post
+      - api
+      - application
+      - dao
+      - domain
+      - dto
+    - user
+  - test
+    - apply
+    - post
+
 ## Commit Convention
 
 ```
@@ -48,10 +68,23 @@ Remove :   파일을 삭제하는 작업만 수행하는 경우
 - test : junit
 - SpringBoot : 2.7.16
 
+## 시작가이드
+
+### Installation
+
+```
+$ git clone https://github.com/rivkode/wanted-pre-onboarding-backend.git
+$ cd wanted-pre-onboarding-backend
+```
+
+
+
 
 ## 요구사항 분석 및 구현과정
 
 본 서비스는 기업이 채용을 하기 위해 채용 홈페이지에 공고를 등록하고 이 공고를 통해 지원자들은 지원을 한다.
+
+### 구현 기능
 
 - 채용공고 등록
 - 채용공고 수정
@@ -268,3 +301,13 @@ api
 ### Response
 
 ![image](https://github.com/rivkode/tech-for-developer/assets/109144975/e70ba63c-7c7e-4b1b-9629-dd799e8a357e)
+
+## 배운 점 & 아쉬운 점
+
+이번 사이드 프로젝트를 통해서 배운점이 많습니다. 기본적인 CRUD 기능들은 쉽다고 생각하였지만 더 높은 가독성을 위해 메서드 내에서의 상수 사용과 예외처리를 하는 법을
+알 수 있었습니다. 그리고 Specification 과 CriteriaBuilder를 통해 비교적 쉽게 동적 query를 만들고 사용해볼 수 있었습니다.
+
+아쉬운 점은 테스트코드를 작성시 Mockmvc에 대한 지식이 부족하다보니 에러를 해결하는데에 어려움이 있었습니다. Request는 잘 도착하는 반면 Response에서 지속적으로
+200 OK 와 null 이 반환되어 이유를 찾지 못했습니다.. 검색기능을 개발하며 like 키워드를 사용하였습니다. 간단한 검색 기능을 위해 like 사용도
+적절할 수 있지만 비용이 많이 발생할 수 있습니다. [LIKE % 위치에 따른 인덱스](https://velog.io/@rivkode/MySQL-LIKE-%EC%9C%84%EC%B9%98%EC%97%90-%EB%94%B0%EB%A5%B8-%EC%9D%B8%EB%8D%B1%EC%8A%A4) 
+최적화를 위해서는 어떤 방법이 있을지에 대해서 고민해보며 부족한 부분을 채워가겠습니다. 
