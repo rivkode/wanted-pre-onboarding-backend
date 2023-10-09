@@ -24,18 +24,16 @@ public class ApplyService {
 
     @Transactional
     public void createApply(ApplyDto dto) {
-        log.info("applyOptional11");
         Optional<Apply> applyOptional = applyRepository.findByUserIdAndPostId(dto.getUserId(), dto.getPostId());
-        log.info("applyOptional");
 
         if (applyOptional.isPresent()) {
             throw new CustomException(ErrorCode.DATA_EXIST);
 
         } else {
             Optional<User> userOptional = userRepository.findById(dto.getUserId());
-            log.info("userID");
+            log.info(">> userId : {}", dto.getUserId());
             Optional<Post> postOptional = postRepository.findById(dto.getPostId());
-            log.info("postID");
+            log.info(">> postId : {}", dto.getPostId());
             applyRepository.save(dto.toEntity(userOptional.get(), postOptional.get()));
         }
     }

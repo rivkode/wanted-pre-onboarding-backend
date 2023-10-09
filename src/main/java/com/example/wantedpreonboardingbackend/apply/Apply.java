@@ -36,5 +36,6 @@ public class Apply {
     private Apply(User user, Post post) {
         this.user = user;
         this.post = post;
+        this.status = ApplyStatus.PROCESS;
     }
 }

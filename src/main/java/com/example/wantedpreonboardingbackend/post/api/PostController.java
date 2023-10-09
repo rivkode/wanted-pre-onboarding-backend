@@ -51,7 +51,7 @@ public class PostController {
     public ResponseEntity<ApiResponse<?>> updatePost(@Valid @RequestBody UpdatePostRequest request) {
         int UPDATE_POST = 0;
 
-        int result = postService.updatePost(request.getPostId(), request);
+        int result = postService.updatePost(request);
         if (result == UPDATE_POST) {
             return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.UPDATE_POST));
         } else {

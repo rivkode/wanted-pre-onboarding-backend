@@ -53,10 +53,10 @@ public class PostService {
         return DELETE_POST;
     }
 
-    public int updatePost(Long postId, UpdatePostRequest request) {
+    public int updatePost(UpdatePostRequest request) {
         int UPDATE_POST = 0;
 
-        Optional<Post> postOptional = postRepository.findById(postId);
+        Optional<Post> postOptional = postRepository.findById(request.getPostId());
         if (postOptional.isPresent()) {
             try {
                 postOptional.get().setContent(request.getContent());
@@ -104,7 +104,7 @@ public class PostService {
 
     public List<PostResponse> searchAllPosts(String search) {
         List<PostResponse> postResponseList = new ArrayList<>();
-        Specification<Post> spec = search(search);
+        Specification<Post> spec = this.search(search);
         List<Post> posts = postRepository.findAll(spec);
 
         for (Post p : posts) {
