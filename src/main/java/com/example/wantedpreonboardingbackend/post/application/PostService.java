@@ -10,9 +10,11 @@ import com.example.wantedpreonboardingbackend.post.dto.request.UpdatePostRequest
 import com.example.wantedpreonboardingbackend.post.dto.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -84,6 +86,46 @@ public class PostService {
         }
 
         return postResponseList;
+    }
 
+    public List<PostResponse> searchAllPosts(String search) {
+        List<PostResponse> postResponseList = new ArrayList<>();
+        Specification<Post> spec = search(search);
+        List<Post> posts = postRepository.findAll(spec);
+
+        for (Post p : posts) {
+            postResponseList.add(PostResponse.from(p));
+        }
+        return postResponseList;
+    }
+
+    public Specification<Post> search(String keyword) {
+        return new Specification<Post>() {
+            @Override
+            public Predicate toPredicate(Root<Post> post, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                query.distinct(true); // 중복제거
+                Join<Post, Company> company = post.join("company", JoinType.LEFT);
+                try {
+                    int keywordInt = Integer.parseInt(keyword);
+                    return cb.or(
+                            cb.like(company.get("name"), "%" + keyword + "%"),
+                            cb.like(post.get("position"), "%" + keyword + "%"),
+                            cb.like(post.get("reward"), "%" + keywordInt + "%"),
+                            cb.like(post.get("skills"), "%" + keyword + "%"),
+                            cb.like(post.get("country"), "%" + keyword + "%"),
+                            cb.like(post.get("region"), "%" + keyword + "%")
+                    );
+                } catch (Exception e) {
+                    return cb.or(
+                            cb.like(company.get("name"), "%" + keyword + "%"),
+                            cb.like(post.get("position"), "%" + keyword + "%"),
+                            cb.like(post.get("skills"), "%" + keyword + "%"),
+                            cb.like(post.get("country"), "%" + keyword + "%"),
+                            cb.like(post.get("region"), "%" + keyword + "%")
+                    );
+                }
+
+            }
+        };
     }
 }

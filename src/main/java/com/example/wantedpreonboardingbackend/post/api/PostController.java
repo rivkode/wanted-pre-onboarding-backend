@@ -77,4 +77,13 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.LOAD_POST, postService.getAllPosts()));
     }
 
+    @GetMapping(value = "/post")
+    public ResponseEntity<ApiResponse<List<PostResponse>>> searchAllPosts(@RequestParam("search") String search) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.LOAD_POST, postService.searchAllPosts(search)));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
