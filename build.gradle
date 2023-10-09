@@ -24,11 +24,24 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    //database
+    implementation 'com.mysql:mysql-connector-j'
+
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+    // lombok
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // parse json
+    implementation 'com.google.code.gson:gson:2.9.0'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'com.mysql:mysql-connector-j:8.0.31'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+    testImplementation "com.github.tomakehurst:wiremock-jre8:2.35.0"
 }
 
 tasks.named('test') {

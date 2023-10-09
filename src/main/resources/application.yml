@@ -20,3 +20,11 @@ spring:
         format_sql: true
         jdbc:
           time_zone: Asia/Seoul
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+swagger:
+  base-package: com.example.wantedpreonboardingbackend
+  path: /api/**
+  version: 1.0.0
