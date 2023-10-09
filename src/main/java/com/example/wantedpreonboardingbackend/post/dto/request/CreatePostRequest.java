@@ -18,6 +18,8 @@ public class CreatePostRequest {
     private String country;
     private String region;
 
+    private Long companyId;
+
     public Post toEntity(Company company) {
         return Post.builder()
                 .company(company)

@@ -18,8 +18,6 @@ public class User {
     private Long id;
 
     private String username;
-
     private String skills;
     private String position;
-
 }
