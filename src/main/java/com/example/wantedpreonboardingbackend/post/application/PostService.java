@@ -69,7 +69,7 @@ public class PostService {
 
     public Post findPostById(Long postId) {
         return postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(ErrorCode.DATA_NOT_EXIT));
+                .orElseThrow(() -> new CustomException(ErrorCode.DATA_NOT_EXIST));
     }
 
     public PostResponse getPostDetail(Long postId, Long companyId) {

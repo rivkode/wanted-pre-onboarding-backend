@@ -24,20 +24,31 @@ public class ApplyService {
 
     @Transactional
     public ApplyDto createApply(ApplyDto dto) {
+        try {
+            Long savedApplyId = applySave(dto);
+            Optional<Apply> savedApply = applyRepository.findById(savedApplyId);
+            return ApplyDto.from(savedApply.get());
+        } catch (Exception e) {
+            log.error("createApply Error {}", e.getMessage());
+            throw new CustomException(ErrorCode.DATA_NOT_EXIST);
+        }
+    }
 
+    public synchronized Long applySave(ApplyDto dto) {
         Optional<Apply> applyOptional = applyRepository.findByUserIdAndPostId(dto.getUserId(), dto.getPostId());
 
         if (applyOptional.isPresent()) {
-            throw new CustomException(ErrorCode.DATA_EXIST);
-
+            // 지원 실행하지 않음
+            return 0L;
         } else {
-            Optional<User> userOptional = userRepository.findById(dto.getUserId());
-            log.info(">> userId : {}", dto.getUserId());
-            Optional<Post> postOptional = postRepository.findById(dto.getPostId());
-            log.info(">> postId : {}", dto.getPostId());
-            Apply savedApply = applyRepository.save(dto.toEntity(userOptional.get(), postOptional.get()));
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.DATA_NOT_EXIST));
+        Post post = postRepository.findById(dto.getPostId())
+                .orElseThrow(() -> new CustomException(ErrorCode.DATA_NOT_EXIST));
 
-            return ApplyDto.from(savedApply);
+        Apply savedApply = applyRepository.saveAndFlush(dto.toEntity(user, post));
+
+        return savedApply.getId();
         }
     }
 }
