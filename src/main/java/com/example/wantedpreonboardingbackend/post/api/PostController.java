@@ -36,41 +36,22 @@ public class PostController {
 
     @PostMapping(value = "/post", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<?>> createPost(@Valid @RequestBody CreatePostRequest request) {
-        int CREATE_POST = 0;
-
         Company company = companyService.getCompany(request.getCompanyId());
         log.info("request content : {}", request.getContent());
-        int result = postService.createPost(company, request);
-        log.info("postService Create result : {}", result);
-        if (result == CREATE_POST) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(success(SuccessCode.CREATE_POST));
-        } else {
-            throw new CustomException(ErrorCode.SERVER_ERROR);
-        }
+        postService.createPost(company, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(success(SuccessCode.CREATE_POST));
     }
 
     @PutMapping(value = "/post", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<?>> updatePost(@Valid @RequestBody UpdatePostRequest request) {
-        int UPDATE_POST = 0;
-
-        int result = postService.updatePost(request);
-        if (result == UPDATE_POST) {
-            return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.UPDATE_POST));
-        } else {
-            throw new CustomException(ErrorCode.SERVER_ERROR);
-        }
+        postService.updatePost(request);
+        return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.UPDATE_POST));
     }
 
     @DeleteMapping(value = "/post/{postId}")
     public ResponseEntity<ApiResponse<?>> deletePost(@PathVariable("postId") Long postId) {
-        int DELETE_POST = 0;
-
-        int result = postService.deletePost(postId);
-        if (result == DELETE_POST) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(success(SuccessCode.DELETE_POST));
-        } else {
-            throw new CustomException(ErrorCode.SERVER_ERROR);
-        }
+        postService.deletePost(postId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(success(SuccessCode.DELETE_POST));
     }
 
     @GetMapping(value = "/post/list")

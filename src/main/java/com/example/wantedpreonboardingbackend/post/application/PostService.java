@@ -25,42 +25,42 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
 
-        public int createPost(Company company, CreatePostRequest request) {
-        int CREATE_POST = 0;
+    @Transactional
+    public void createPost(Company company, CreatePostRequest request) {
 
         try {
             log.info("service request skills {}", request.getSkills());
             postRepository.save(request.toEntity(company));
             log.info("save complete");
         } catch (Exception e) {
-            log.error("{}",e);
-            // 추후 예외 처리
+            log.error("create Post Exception {}", e);
+            throw new CustomException(ErrorCode.INVALID_POST);
         }
-        return CREATE_POST;
     }
 
     @Transactional
     public void deletePost(Long postId) {
-        Optional<Post> postOptional = postRepository.findById(postId);
-        if (postOptional.isPresent()) {
-            try {
-                postRepository.delete(postOptional.get());
-            } catch (Exception e) {
-                // 추후 예외 처리
-//                log.info("delete Post Exception {}", e);
-                throw new IllegalStateException(e);
-            }
-        } else {
-            throw new CustomException(ErrorCode.INFO_NOT_EXIST);
+        Post post = findPostById(postId);
+        try {
+            postRepository.delete(post);
+        } catch (Exception e) {
+            log.error("delete Post Exception {}", e);
+            throw new CustomException(ErrorCode.INVALID_POST);
         }
     }
 
+    @Transactional
     public void updatePost(UpdatePostRequest request) {
-        Post post = findPostById(request.getPostId());
-        log.info("before update post position {}", post.getPosition());
-        Post updatedPost = post.updatePost(request);
-        postRepository.save(updatedPost);
-        log.info("after update post position {}", updatedPost.getPosition());
+        try {
+            Post post = findPostById(request.getPostId());
+            log.info("before update post position {}", post.getPosition());
+            Post updatedPost = post.updatePost(request);
+            postRepository.save(updatedPost);
+            log.info("after update post position {}", updatedPost.getPosition());
+        } catch (Exception e) {
+            log.error("update Post Exception {}", e);
+            throw new CustomException(ErrorCode.INVALID_POST);
+        }
     }
 
     public Post findPostById(Long postId) {
@@ -69,17 +69,10 @@ public class PostService {
     }
 
     public PostResponse getPostDetail(Long postId, Long companyId) {
-        Optional<Post> postOptional = postRepository.findById(postId);
+        Post post = findPostById(postId);
         List<Long> postIds = postRepository.findPostIdsByCompanyId(companyId);
-
-
-        if (postOptional.isPresent()) {
-            PostResponse postResponse = PostResponse.detailFrom(postOptional.get(), postIds);
-            return postResponse;
-        } else {
-            throw new CustomException(ErrorCode.DATA_NOT_EXIT);
-        }
-
+        PostResponse postResponse = PostResponse.detailFrom(post, postIds);
+        return postResponse;
     }
 
     public List<PostResponse> getAllPosts() {
