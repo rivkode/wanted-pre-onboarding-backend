@@ -1,5 +1,9 @@
 package com.example.wantedpreonboardingbackend.post.dto.request;
 
+import com.example.wantedpreonboardingbackend.post.domain.Country;
+import com.example.wantedpreonboardingbackend.post.domain.Position;
+import com.example.wantedpreonboardingbackend.post.domain.Region;
+import com.example.wantedpreonboardingbackend.post.domain.Skills;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,19 +20,19 @@ public class UpdatePostRequest {
     private String content;
 
     @NotNull
-    private String position;
+    private Position position;
 
     @NotNull
     private int reward;
 
     @NotNull
-    private String skills;
+    private Skills skills;
 
     @NotNull
-    private String country;
+    private Country country;
 
     @NotNull
-    private String region;
+    private Region region;
 
     @NotNull
     private Long companyId;
