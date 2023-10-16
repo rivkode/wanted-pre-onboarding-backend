@@ -33,6 +33,7 @@ public class PostService {
             postRepository.save(request.toEntity(company));
             log.info("save complete");
         } catch (Exception e) {
+            log.error("{}",e);
             // 추후 예외 처리
         }
         return CREATE_POST;
@@ -109,9 +110,13 @@ public class PostService {
 
     public List<PostResponse> searchAllPosts(String search) {
         List<PostResponse> postResponseList = new ArrayList<>();
+
+        // 동적으로 query 생성
         Specification<Post> spec = this.search(search);
+
         List<Post> posts = postRepository.findAll(spec);
 
+        // Post 객체를 PostResponse로 변환
         for (Post p : posts) {
             postResponseList.add(PostResponse.from(p));
         }
@@ -122,11 +127,16 @@ public class PostService {
         return new Specification<Post>() {
             @Override
             public Predicate toPredicate(Root<Post> post, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                query.distinct(true); // 중복제거
+
+                // 중복제거
+                query.distinct(true);
+
+                // Post table과 Company table을 Outer Join 수행
                 Join<Post, Company> company = post.join("company", JoinType.LEFT);
                 try {
                     int keywordInt = Integer.parseInt(keyword);
                     return cb.or(
+                            // join한 table을 통해 name column 검색
                             cb.like(company.get("name"), "%" + keyword + "%"),
                             cb.like(post.get("position"), "%" + keyword + "%"),
                             cb.like(post.get("reward"), "%" + keywordInt + "%"),
@@ -136,6 +146,7 @@ public class PostService {
                     );
                 } catch (Exception e) {
                     return cb.or(
+                            // join한 table을 통해 name column 검색
                             cb.like(company.get("name"), "%" + keyword + "%"),
                             cb.like(post.get("position"), "%" + keyword + "%"),
                             cb.like(post.get("skills"), "%" + keyword + "%"),

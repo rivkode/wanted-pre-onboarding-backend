@@ -66,4 +66,5 @@ public class Post {
         this.country = country;
         this.region = region;
     }
+
 }

@@ -5,19 +5,30 @@ import com.example.wantedpreonboardingbackend.post.domain.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.validation.constraints.NotNull;
+
 @AllArgsConstructor
 @Getter
 public class CreatePostRequest {
     /**
      * 사용자로부터 입력받는 정보
+     * 생성시 모든 정보가 필요하므로 NotNull을 통해 null 값을 허용하지 않음
+     * 이를 valid를 통해 유효성 검사 진행
      */
+    @NotNull
     private String content;
+    @NotNull
     private String position;
+    @NotNull
     private int reward;
+    @NotNull
     private String skills;
+    @NotNull
     private String country;
+    @NotNull
     private String region;
 
+    @NotNull
     private Long companyId;
 
     public Post toEntity(Company company) {
