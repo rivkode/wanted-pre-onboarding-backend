@@ -3,6 +3,8 @@ package com.example.wantedpreonboardingbackend.post.domain;
 import com.example.wantedpreonboardingbackend.company.Company;
 import com.example.wantedpreonboardingbackend.post.dto.request.UpdatePostRequest;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -10,6 +12,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
+@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE user SET isDeleted = true WHERE id = ?")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,21 +26,26 @@ public class Post {
 
     private String content;
 
-    private String position;
+    @Enumerated(EnumType.STRING)
+    private Position position;
 
     private int reward;
 
-    private String skills;
+    @Enumerated(EnumType.STRING)
+    private Skills skills;
 
-    private String country;
+    @Enumerated(EnumType.STRING)
+    private Country country;
 
-    private String region;
+    @Enumerated(EnumType.STRING)
+    private Region region;
 
+    @Column(name = "is_deleted")
     private boolean isDeleted;
 
     @Builder
-    private Post(Company company, String content, String position, int reward, String skills, String country,
-                 String region) {
+    private Post(Company company, String content, Position position, int reward, Skills skills, Country country,
+                 Region region) {
         this.company = company;
         this.content = content;
         this.position = position;

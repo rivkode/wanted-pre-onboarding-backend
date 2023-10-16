@@ -43,8 +43,7 @@ public class PostService {
         Post post = findPostById(postId);
         try {
             // soft delete로 변경
-            post.deletePost();
-            postRepository.save(post);
+            postRepository.delete(post);
             return PostResponse.from(post);
         } catch (Exception e) {
             log.error("delete Post Exception {}", e.getMessage());
