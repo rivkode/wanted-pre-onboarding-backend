@@ -25,7 +25,7 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
 
-    public int createPost(Company company, CreatePostRequest request) {
+        public int createPost(Company company, CreatePostRequest request) {
         int CREATE_POST = 0;
 
         try {
@@ -40,47 +40,32 @@ public class PostService {
     }
 
     @Transactional
-    public int deletePost(Long postId) {
-        int DELETE_POST = 0;
+    public void deletePost(Long postId) {
         Optional<Post> postOptional = postRepository.findById(postId);
         if (postOptional.isPresent()) {
             try {
                 postRepository.delete(postOptional.get());
             } catch (Exception e) {
                 // 추후 예외 처리
+//                log.info("delete Post Exception {}", e);
+                throw new IllegalStateException(e);
             }
         } else {
             throw new CustomException(ErrorCode.INFO_NOT_EXIST);
         }
-        return DELETE_POST;
     }
 
-    public int updatePost(UpdatePostRequest request) {
-        int UPDATE_POST = 0;
-
-        Optional<Post> postOptional = postRepository.findById(request.getPostId());
-        if (postOptional.isPresent()) {
-            setPost(request, postOptional.get());
-        } else {
-            throw new CustomException(ErrorCode.INFO_NOT_EXIST);
-        }
-        return UPDATE_POST;
+    public void updatePost(UpdatePostRequest request) {
+        Post post = findPostById(request.getPostId());
+        log.info("before update post position {}", post.getPosition());
+        Post updatedPost = post.updatePost(request);
+        postRepository.save(updatedPost);
+        log.info("after update post position {}", updatedPost.getPosition());
     }
 
-    public void setPost(UpdatePostRequest request, Post post) {
-        try {
-            post.setContent(request.getContent());
-            post.setPosition(request.getPosition());
-            post.setReward(request.getReward());
-            post.setSkills(request.getSkills());
-            post.setCountry(request.getCountry());
-            post.setRegion(request.getRegion());
-            log.info("수정된 content : {}", post.getContent());
-            log.info("수정된 skills : {}", post.getSkills());
-            postRepository.save(post);
-        } catch (Exception e) {
-            // 추후 예외 처리
-        }
+    public Post findPostById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.DATA_NOT_EXIT));
     }
 
     public PostResponse getPostDetail(Long postId, Long companyId) {

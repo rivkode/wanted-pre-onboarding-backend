@@ -9,14 +9,25 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class UpdatePostRequest {
     /**
-     * Post 부분 수정이므로 companyId와 postId에 대해서만 NotNull 적용
+     * Post 수정이며 모든 값에 대해 요청하며 전달받은 값으로 모든 값 업데이트
      * Valid를 통해 유효성 검증 진행
      */
+    @NotNull
     private String content;
+
+    @NotNull
     private String position;
+
+    @NotNull
     private int reward;
+
+    @NotNull
     private String skills;
+
+    @NotNull
     private String country;
+
+    @NotNull
     private String region;
 
     @NotNull

@@ -1,6 +1,7 @@
 package com.example.wantedpreonboardingbackend.post.domain;
 
 import com.example.wantedpreonboardingbackend.company.Company;
+import com.example.wantedpreonboardingbackend.post.dto.request.UpdatePostRequest;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,30 +32,6 @@ public class Post {
 
     private String region;
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public void setReward(int reward) {
-        this.reward = reward;
-    }
-
-    public void setSkills(String skills) {
-        this.skills = skills;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
     @Builder
     private Post(Company company, String content, String position, int reward, String skills, String country,
                  String region) {
@@ -65,6 +42,17 @@ public class Post {
         this.skills = skills;
         this.country = country;
         this.region = region;
+    }
+
+    public Post updatePost(UpdatePostRequest request) {
+        this.content = request.getContent();
+        this.position = request.getPosition();
+        this.reward = request.getReward();
+        this.skills = request.getSkills();
+        this.country = request.getCountry();
+        this.region = request.getRegion();
+
+        return this;
     }
 
 }
