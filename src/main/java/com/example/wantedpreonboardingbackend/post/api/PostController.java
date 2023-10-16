@@ -35,22 +35,22 @@ public class PostController {
     private final UserService userService;
 
     @PostMapping(value = "/post", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse<?>> createPost(@Valid @RequestBody CreatePostRequest request) {
+    public ResponseEntity<ApiResponse<PostResponse>> createPost(@Valid @RequestBody CreatePostRequest request) {
         Company company = companyService.getCompany(request.getCompanyId());
         log.info("request content : {}", request.getContent());
-        postService.createPost(company, request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(success(SuccessCode.CREATE_POST));
+        PostResponse postResponse = postService.createPost(company, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(success(SuccessCode.CREATE_POST, postResponse));
     }
 
     @PutMapping(value = "/post", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse<?>> updatePost(@Valid @RequestBody UpdatePostRequest request) {
-        postService.updatePost(request);
-        return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.UPDATE_POST));
+    public ResponseEntity<ApiResponse<PostResponse>> updatePost(@Valid @RequestBody UpdatePostRequest request) {
+        PostResponse postResponse = postService.updatePost(request);
+        return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.UPDATE_POST, postResponse));
     }
 
     @DeleteMapping(value = "/post/{postId}")
-    public ResponseEntity<ApiResponse<?>> deletePost(@PathVariable("postId") Long postId) {
-        postService.deletePost(postId);
+    public ResponseEntity<ApiResponse<PostResponse>> deletePost(@PathVariable("postId") Long postId) {
+        postService.deletePost(postId); // soft delete로 변경예정
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(success(SuccessCode.DELETE_POST));
     }
 
@@ -70,7 +70,7 @@ public class PostController {
     }
 
     @GetMapping(value = "/post/{postId}")
-    public ResponseEntity<ApiResponse<?>> getPostDetail(@PathVariable("postId") Long postId, @RequestParam("companyId") Long companyId) {
+    public ResponseEntity<ApiResponse<PostResponse>> getPostDetail(@PathVariable("postId") Long postId, @RequestParam("companyId") Long companyId) {
 
         return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.LOAD_POST, postService.getPostDetail(postId, companyId)));
     }

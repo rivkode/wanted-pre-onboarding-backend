@@ -26,12 +26,13 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional
-    public void createPost(Company company, CreatePostRequest request) {
+    public PostResponse createPost(Company company, CreatePostRequest request) {
 
         try {
             log.info("service request skills {}", request.getSkills());
-            postRepository.save(request.toEntity(company));
+            Post savedPost = postRepository.save(request.toEntity(company));
             log.info("save complete");
+            return PostResponse.from(savedPost);
         } catch (Exception e) {
             log.error("create Post Exception {}", e);
             throw new CustomException(ErrorCode.INVALID_POST);
@@ -39,10 +40,11 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(Long postId) {
+    public PostResponse deletePost(Long postId) {
         Post post = findPostById(postId);
         try {
-            postRepository.delete(post);
+            postRepository.delete(post); // soft delete로 변경예정
+            return PostResponse.from(savedPost);
         } catch (Exception e) {
             log.error("delete Post Exception {}", e);
             throw new CustomException(ErrorCode.INVALID_POST);
@@ -50,13 +52,14 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(UpdatePostRequest request) {
+    public PostResponse updatePost(UpdatePostRequest request) {
         try {
             Post post = findPostById(request.getPostId());
             log.info("before update post position {}", post.getPosition());
             Post updatedPost = post.updatePost(request);
             postRepository.save(updatedPost);
             log.info("after update post position {}", updatedPost.getPosition());
+            return PostResponse.from(updatedPost);
         } catch (Exception e) {
             log.error("update Post Exception {}", e);
             throw new CustomException(ErrorCode.INVALID_POST);
