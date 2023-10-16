@@ -3,8 +3,6 @@ package com.example.wantedpreonboardingbackend.post.api;
 import com.example.wantedpreonboardingbackend.common.dto.ApiResponse;
 import com.example.wantedpreonboardingbackend.company.Company;
 import com.example.wantedpreonboardingbackend.company.CompanyService;
-import com.example.wantedpreonboardingbackend.exception.CustomException;
-import com.example.wantedpreonboardingbackend.exception.ErrorCode;
 import com.example.wantedpreonboardingbackend.exception.SuccessCode;
 import com.example.wantedpreonboardingbackend.post.application.PostService;
 import com.example.wantedpreonboardingbackend.post.dto.request.CreatePostRequest;
@@ -50,8 +48,9 @@ public class PostController {
 
     @DeleteMapping(value = "/post/{postId}")
     public ResponseEntity<ApiResponse<PostResponse>> deletePost(@PathVariable("postId") Long postId) {
-        postService.deletePost(postId); // soft delete로 변경예정
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(success(SuccessCode.DELETE_POST));
+        // soft delete로 변경
+        PostResponse postResponse = postService.deletePost(postId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(success(SuccessCode.DELETE_POST, postResponse));
     }
 
     @GetMapping(value = "/post/list")
@@ -62,11 +61,7 @@ public class PostController {
 
     @GetMapping(value = "/post")
     public ResponseEntity<ApiResponse<List<PostResponse>>> searchAllPosts(@RequestParam("search") String search) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.LOAD_POST, postService.searchAllPosts(search)));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.LOAD_POST, postService.searchAllPosts(search)));
     }
 
     @GetMapping(value = "/post/{postId}")

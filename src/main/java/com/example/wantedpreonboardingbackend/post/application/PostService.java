@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -34,7 +33,7 @@ public class PostService {
             log.info("save complete");
             return PostResponse.from(savedPost);
         } catch (Exception e) {
-            log.error("create Post Exception {}", e);
+            log.error("create Post Exception {}", e.getMessage());
             throw new CustomException(ErrorCode.INVALID_POST);
         }
     }
@@ -43,10 +42,12 @@ public class PostService {
     public PostResponse deletePost(Long postId) {
         Post post = findPostById(postId);
         try {
-            postRepository.delete(post); // soft delete로 변경예정
-            return PostResponse.from(savedPost);
+            // soft delete로 변경
+            post.deletePost();
+            postRepository.save(post);
+            return PostResponse.from(post);
         } catch (Exception e) {
-            log.error("delete Post Exception {}", e);
+            log.error("delete Post Exception {}", e.getMessage());
             throw new CustomException(ErrorCode.INVALID_POST);
         }
     }
@@ -61,7 +62,7 @@ public class PostService {
             log.info("after update post position {}", updatedPost.getPosition());
             return PostResponse.from(updatedPost);
         } catch (Exception e) {
-            log.error("update Post Exception {}", e);
+            log.error("update Post Exception {}", e.getMessage());
             throw new CustomException(ErrorCode.INVALID_POST);
         }
     }
@@ -90,18 +91,23 @@ public class PostService {
     }
 
     public List<PostResponse> searchAllPosts(String search) {
-        List<PostResponse> postResponseList = new ArrayList<>();
+        try {
+            List<PostResponse> postResponseList = new ArrayList<>();
 
-        // 동적으로 query 생성
-        Specification<Post> spec = this.search(search);
+            // 동적으로 query 생성
+            Specification<Post> spec = this.search(search);
 
-        List<Post> posts = postRepository.findAll(spec);
+            List<Post> posts = postRepository.findAll(spec);
 
-        // Post 객체를 PostResponse로 변환
-        for (Post p : posts) {
-            postResponseList.add(PostResponse.from(p));
+            // Post 객체를 PostResponse로 변환
+            for (Post p : posts) {
+                postResponseList.add(PostResponse.from(p));
+            }
+            return postResponseList;
+        } catch (Exception e) {
+            log.error("searchAllPosts {}", e.getMessage());
+            throw new CustomException(ErrorCode.SERVER_ERROR);
         }
-        return postResponseList;
     }
 
     public Specification<Post> search(String keyword) {

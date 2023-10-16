@@ -32,6 +32,8 @@ public class Post {
 
     private String region;
 
+    private boolean isDeleted;
+
     @Builder
     private Post(Company company, String content, String position, int reward, String skills, String country,
                  String region) {
@@ -42,6 +44,7 @@ public class Post {
         this.skills = skills;
         this.country = country;
         this.region = region;
+        this.isDeleted = false;
     }
 
     public Post updatePost(UpdatePostRequest request) {
@@ -53,6 +56,10 @@ public class Post {
         this.region = request.getRegion();
 
         return this;
+    }
+
+    public void deletePost() {
+        this.isDeleted = true;
     }
 
 }
