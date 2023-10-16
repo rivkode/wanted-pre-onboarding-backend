@@ -23,8 +23,7 @@ public class ApplyService {
 
 
     @Transactional
-    public int createApply(ApplyDto dto) {
-        int CREATE_APPLY = 0;
+    public ApplyDto createApply(ApplyDto dto) {
 
         Optional<Apply> applyOptional = applyRepository.findByUserIdAndPostId(dto.getUserId(), dto.getPostId());
 
@@ -36,8 +35,9 @@ public class ApplyService {
             log.info(">> userId : {}", dto.getUserId());
             Optional<Post> postOptional = postRepository.findById(dto.getPostId());
             log.info(">> postId : {}", dto.getPostId());
-            applyRepository.save(dto.toEntity(userOptional.get(), postOptional.get()));
-            return CREATE_APPLY;
+            Apply savedApply = applyRepository.save(dto.toEntity(userOptional.get(), postOptional.get()));
+
+            return ApplyDto.from(savedApply);
         }
     }
 }

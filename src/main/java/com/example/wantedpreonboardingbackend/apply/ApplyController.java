@@ -20,8 +20,8 @@ public class ApplyController {
     private final ApplyService applyService;
 
     @PostMapping(value = "/apply", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse<?>> apply(@Valid @RequestBody ApplyDto dto) {
-        applyService.createApply(dto);
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(SuccessCode.CREATE_APPLY));
+    public ResponseEntity<ApiResponse<ApplyDto>> apply(@Valid @RequestBody ApplyDto dto) {
+        ApplyDto applyDto = applyService.createApply(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(SuccessCode.CREATE_APPLY, applyDto));
     }
 }

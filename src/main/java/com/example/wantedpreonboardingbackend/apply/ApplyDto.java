@@ -23,4 +23,8 @@ public class ApplyDto {
                 .post(post)
                 .build();
     }
+
+    public static ApplyDto from(Apply apply) {
+        return new ApplyDto(apply.getUser().getId(), apply.getPost().getId());
+    }
 }
