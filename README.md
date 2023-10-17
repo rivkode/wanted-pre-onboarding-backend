@@ -8,8 +8,6 @@
 
 ✔️ 가독성을 위해 15줄이 넘지 않도록 노력합니다.
 
-✔️ 테스트코드를 통해 메서드의 의도를 나타내도록 합니다.
-
 ## Directory Architecture
 
 - src
@@ -115,9 +113,8 @@ api
 - 객체 저장을 하기 위해 Service의 createPost()로 request객체를 넘겨줍니다
 - 전달받은 request객체에서 toEntity 메서드를 통해 Post 엔티티로 변환 후 postRepository에 save 합니다
   - 이때 try catch 문을 통해 예외처리를 합니다 (DB와 데이터 처리를 하는 경우에는 다양한 예외가 발생할 수 있으므로)
-- 정상적으로 성공하게되면 controller로 0을 리턴합니다
-  - 이때 상수로 CREATE_POST를 설정하여 가독성을 높입니다
-- Controller에서는 result를 통해 정상 처리 되었을 경우 201 Created 상태코드를 반환합니다
+- 정상적으로 성공하게되면 controller로 PostResponse 를 리턴합니다
+- Controller에서는 result를 통해 정상 처리 되었을 경우 201 Created 상태코드와 PostResponse 를 반환합니다
 
 ### Request
 
@@ -142,9 +139,8 @@ api
 - Service에서 기존에 존재하는 post를 postId로 찾습니다
   - 이때 try catch 문을 통해 예외처리를 합니다
 - Optional을 통해 post객체가 존재하지 않을 경우에는 INFO_NOT_EXIST 를 반환하도록 합니다
-- 정상적으로 수정이 완료되면 Controller 로 0을 반환합니다
-  - 이렇게 0을 반환하는 이유는 예외처리를 하기 위함입니다
-- Controller에서 result를 통해 정상처리 되었을 경우 200 OK 상태코드를 반환합니다
+- 정상적으로 수정이 완료되면 Controller 로 변경된 PostResponse 를 반환합니다
+- Controller에서 result를 통해 정상처리 되었을 경우 200 OK 상태코드와 변경된 PostResponse 를 반환합니다
 
 
 ### Request
@@ -161,6 +157,7 @@ api
 요구사항 분석
 - 등록된 공고를 삭제하기 위해 postId를 클라이언트로부터 PathVariable을 통해 전달받습니다
 - postRepository에서 삭제(delete) 합니다
+- 삭제한 데이터를 보존하기 위해 soft delete를 수행합니다
 
 api
 - **DELETE : /api/v1/post**
@@ -169,7 +166,7 @@ api
 - Controller에서 클라이언트로부터 post 삭제를 위해 postId를 전달받습니다
 - Service에서 기존에 존재하는 post를 postId로 찾습니다
 - 찾은 post 객체를 삭제합니다
-- 정상적으로 삭제가 완료되면 Controller로 0을 반환합니다
+  - post의 isDeleted 컬럼을 true로 변경합니다
 - Controller에서 result를 통해 정상 삭제가 되었을 경우 204 NO_CONTENT 상태코드를 반환합니다
 
 ### Request
@@ -216,6 +213,9 @@ api
 - Parameter을 통해 검색할 keyword를 전달받습니다
 - 전달받은 keyword를 포함하는 모든 post 객체를 반환합니다
 - 이때 keyword는 모든(post_id 제외) column에 해당할 수 있습니다
+- 데이터 무결성을 위해 Post 컬럼 중 position, country, region, skills 에 대해 enum 사용하여 정해진 값을 전달받습니다
+  - 프론트엔드에서 position, country, region, skills 에 대해서는 정해진 값을 전달받는다고 가정합니다.
+  - ex) country에서 한국을 검색하고 싶을 경우 [한국, 대한민국, korea, south of korea] 등 모든 string 값을 받게 되면 검색의 의미가 없으므로
 
 api
 - **GET : /api/v1/post?search={keyword}**
@@ -231,6 +231,7 @@ api
   - join한 결과에서 name 필드에 대해 like 문을 적용하여 name 내에 전달받은 keyword를 앞 뒤로 포함하는지 검색합니다
   - 나머지 column에 대해서는 동일하게 get()을 통해 원하는 필드값에 대해 keyword 검색을 수행합니다
     - 이때 reward는 숫자이므로 try catch문을 통해 예외처리를 수행하였습니다
+    - 컬럼 중 enum으로 설정한 컬럼에 대해 .as(String.class) 을 통해 string 값으로 검색을 가능하게 합니다 
   - Post table을 root로 하는 Specification 형식의 query를 postRepository.findAll()로 전달합니다
   - postRepository는 전달받은 데이터를 바탕으로 DB 에서 검색을 수행하며 결과를 리스트형식으로 반환합니다
   - 반환된 객체를 클라이언트에서 원하는 타입으로 변환하기 위해 PostResponse.from() 을 통해 수행합니다
@@ -280,19 +281,27 @@ api
 요구사항 분석
 - RequestBody를 통해 postId와 userId를 전달받습니다
 - 전달받은 두 엔티티를 연결시킵니다
+- 동시성 이슈를 해결하기 위해 @Transactional, for update, synchronized 키워드를 사용합니다
 
 api
 - **POST : /api/v1/apply**
 
 구현과정
 - postId와 userId를 클라이언트로부터 전달받습니다
+- AppplyController에서 ApplyService의 createApply() 메서드를 실행합니다
+- createApply() 메서드는 @Transactional 로 proxy 객체를 통해 메서드 앞뒤로 Transaction이 생성되고 종료됩니다
+- applySave() 메서드에서 synchronized 를 통해 여러개의 스레드가 한개의 자원을 사용하고자 할 때
+- 현재 데이터를 사용하고 있는 해당 스레드를 제외하고 나머지 스레드들은 데이터에 접근 할 수 없도록 막는 개념입니다.
+  - 여기서 한개의 자원은 applySave() 입니다
 - 지원은 1 회만 가능하므로 Service에서 동일한 postId와 userId로 생성된 Apply가 applyRepository를 통해 존재하는지 찾습니다
-  - 이때 query문은 "SELECT * FROM apply WHERE user_id = :userId and post_id = :postId"과 같습니다
-- 만약 존재한다면 DATA_EXIST 를 반환합니다
-- 존재하지 않을 경우 Apply 객체를 생성합니다
-  - 이때 postId와 userId를 각 repository를 통해 조회한 뒤 ApplyDto.toEntity() 를 통해 Apply객체를 생성합니다
+- 만약 존재한다면 지원을 실행하지 않습니다
+- 만약 존재하지 않는다면 user 와 post를 조회하여 저장을 진행합니다
+  - 이때 query문은 "SELECT * FROM apply WHERE user_id = :userId and post_id = :postId for update" 와 같습니다
+  - for update를 사용하여 조회하려는 row에 대해 LOCK 을 얻습니다
+  - 조회 후 LOCK을 다시 반환합니다
+- postId와 userId를 각 repository를 통해 조회한 뒤 ApplyDto.toEntity() 를 통해 Apply객체를 생성합니다
 - 생성한 Apply 객체를 저장(save) 합니다
-- 정상적으로 처리가 되었을 경우 200 OK 상태코드를 반환합니다
+- 정상적으로 처리가 되었을 경우 200 OK 상태코드와 ApplyDto 를 반환합니다
 
 ### Request
 
@@ -310,4 +319,4 @@ api
 아쉬운 점은 테스트코드를 작성시 Mockmvc에 대한 지식이 부족하다보니 에러를 해결하는데에 어려움이 있었습니다. Request는 잘 도착하는 반면 Response에서 지속적으로
 200 OK 와 null 이 반환되어 이유를 찾지 못했습니다.. 검색기능을 개발하며 like 키워드를 사용하였습니다. 간단한 검색 기능을 위해 like 사용도
 적절할 수 있지만 비용이 많이 발생할 수 있습니다. [LIKE % 위치에 따른 인덱스](https://velog.io/@rivkode/MySQL-LIKE-%EC%9C%84%EC%B9%98%EC%97%90-%EB%94%B0%EB%A5%B8-%EC%9D%B8%EB%8D%B1%EC%8A%A4) 
-최적화를 위해서는 어떤 방법이 있을지에 대해서 고민해보며 부족한 부분을 채워가겠습니다. 
+최적화를 위해서는 어떤 방법이 있을지에 대해서 고민해보며 부족한 부분을 채워가겠습니다.
