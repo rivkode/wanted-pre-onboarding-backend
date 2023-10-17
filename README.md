@@ -258,7 +258,7 @@ api
 
 ### Response
 
-![image](https://github.com/rivkode/wanted-pre-onboarding-backend/assets/109144975/46f51aec-2058-42db-829a-eb9b5e6fdd7b)
+![image](https://github.com/rivkode/wanted-pre-onboarding-backend/assets/109144975/bbb55a69-ac4b-4354-91e5-87ab71875c64)
 
 
 ### 6. 채용공고 상세페이지
