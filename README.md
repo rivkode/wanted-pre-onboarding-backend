@@ -118,11 +118,12 @@ api
 
 ### Request
 
-![image](https://github.com/rivkode/tech-for-developer/assets/109144975/da6b6a00-fc82-4235-88a1-310093cebaf3)
+![image](https://github.com/rivkode/wanted-pre-onboarding-backend/assets/109144975/6bcfa135-cf00-4d75-8816-0ce3f3c7b961)
 
 ### Response
 
-![image](https://github.com/rivkode/tech-for-developer/assets/109144975/ea3a6a58-7c2f-4dea-8523-cd976750688f)
+![image](https://github.com/rivkode/wanted-pre-onboarding-backend/assets/109144975/8fedcc36-15d2-45eb-bc7c-cd63a46889b6)
+
 
 
 ### 2. 채용공고 수정
@@ -145,11 +146,11 @@ api
 
 ### Request
 
-![image](https://github.com/rivkode/tech-for-developer/assets/109144975/4cbbf08b-fd3d-4f2a-ac8b-b30464ba8369)
+![image](https://github.com/rivkode/wanted-pre-onboarding-backend/assets/109144975/4bebc397-d013-42c2-9186-0d2ea07875cd)
 
 ### Response
 
-![image](https://github.com/rivkode/tech-for-developer/assets/109144975/2c452ec7-f48b-48e4-af63-e5e5c1cdc165)
+![image](https://github.com/rivkode/wanted-pre-onboarding-backend/assets/109144975/a7f9f596-7a1d-4224-99b0-4eac016475d8)
 
 
 ### 3. 채용공고 삭제
@@ -171,12 +172,12 @@ api
 
 ### Request
 
-![image](https://github.com/rivkode/tech-for-developer/assets/109144975/de9dec11-ab5f-41e4-ad96-43e3d7d206ed)
+![image](https://github.com/rivkode/wanted-pre-onboarding-backend/assets/109144975/04bcd40d-79dd-4d92-b938-5a2ccdc0201c)
 
 
 ### Response
 
-![image](https://github.com/rivkode/tech-for-developer/assets/109144975/18b21b21-06be-4b46-93bd-694dbf8236ac)
+![image](https://github.com/rivkode/wanted-pre-onboarding-backend/assets/109144975/a78290c0-de4e-4b11-93ee-9a6634e1a453)
 
 
 
@@ -245,7 +246,7 @@ api
 
 ### Response
 
-![image](https://github.com/rivkode/tech-for-developer/assets/109144975/2bc975f5-1f3f-4c2f-8cc7-5dbe25ca9272)
+![image](https://github.com/rivkode/wanted-pre-onboarding-backend/assets/109144975/46f51aec-2058-42db-829a-eb9b5e6fdd7b)
 
 
 ### 6. 채용공고 상세페이지
@@ -313,10 +314,48 @@ api
 
 ## 배운 점 & 아쉬운 점
 
+### 배웠던 점
+
 이번 사이드 프로젝트를 통해서 배운점이 많습니다. 기본적인 CRUD 기능들은 쉽다고 생각하였지만 더 높은 가독성을 위해 메서드 내에서의 상수 사용과 예외처리를 하는 법을
 알 수 있었습니다. 그리고 Specification 과 CriteriaBuilder를 통해 비교적 쉽게 동적 query를 만들고 사용해볼 수 있었습니다.
 
+데이터의 무결성을 고려하여 Enum을 사용하였습니다. Post의 컬럼인 Country, Region 에 대해 정해진 값들을 받으며 사용자가 검색 시 올바른 검색결과를
+얻기 위해 enum을 사용하였습니다.
+- 이때 프론트엔드에서는 사전에 정의한 값들을 요청한다고 가정하였습니다.
+
+
+동시성 이슈와 관련하여 @Transactional 어노테이션의 동작원리에 대해 찾아보게 되었고 Transaction 생성이 어느시점에 발생하는지와 공유자원 관리가 중요하다는 점을 알게 되었습니다.
+
+메서드에서 parameter를 전달받을때 예상치 못한 입력에 대해 예외처리를 어떻게 할지 고민해보게 되었습니다.
+
+검색 기능을 위해 최초에는 모든 Column 들을 String 으로 설정하였지만 그렇게 되어버리면 사용자들이  원하는 검색결과를 알기 어려울 것 같았습니다. 그래서 enum을 사용하여 정해진 값들을 받아 처리하였습니다.
+
+
+### 아쉬운점
+
 아쉬운 점은 테스트코드를 작성시 Mockmvc에 대한 지식이 부족하다보니 에러를 해결하는데에 어려움이 있었습니다. Request는 잘 도착하는 반면 Response에서 지속적으로
-200 OK 와 null 이 반환되어 이유를 찾지 못했습니다.. 검색기능을 개발하며 like 키워드를 사용하였습니다. 간단한 검색 기능을 위해 like 사용도
-적절할 수 있지만 비용이 많이 발생할 수 있습니다. [LIKE % 위치에 따른 인덱스](https://velog.io/@rivkode/MySQL-LIKE-%EC%9C%84%EC%B9%98%EC%97%90-%EB%94%B0%EB%A5%B8-%EC%9D%B8%EB%8D%B1%EC%8A%A4) 
+200 OK 와 null 이 반환되어 이유를 찾지 못했습니다.. 
+
+검색기능을 개발하며 like 키워드를 사용하였습니다. 간단한 검색 기능을 위해 like 사용도 적절할 수 있지만 비용이 많이 발생할 수 있습니다. [LIKE % 위치에 따른 인덱스](https://velog.io/@rivkode/MySQL-LIKE-%EC%9C%84%EC%B9%98%EC%97%90-%EB%94%B0%EB%A5%B8-%EC%9D%B8%EB%8D%B1%EC%8A%A4) 
 최적화를 위해서는 어떤 방법이 있을지에 대해서 고민해보며 부족한 부분을 채워가겠습니다.
+
+정규화
+
+채용 공고에서는 보통 여러개의 Skills를 요구하므로 Post에서 Skills를 입력할때 요구는 Skills는 여러개가 될 수 있습니다
+이에 따라 Skills 와 PostSkills 라는 엔티티를 정의하며 정규화를 통해 중복제거를 하고자 하였고 Post 조회시 아래 query를 통해 조회하고자 하였습니다.
+
+```sql
+SELECT p.*
+FROM Post p
+JOIN PostSkills ps ON p.post_id = ps.post_id
+JOIN Skills s ON ps.skill_id = s.skill_id
+WHERE p.post_id = ?;
+
+```
+
+하지만 Skills를 Controller에서 여러개의 값을 전달할때 어떻게 전달받고 service에서 처리해야할지 확신이 서지 않았습니다.
+
+문자열 형식으로 입력을 받아 parsing 을 하여 다시 리스트에 넣어서 처리해야하는지 혹은 다른 방법이 있을지에 대해 답이 나오지 못했습니다.
+
+그리고 Company와 Post 엔티티에서 Country와 Region에 대해 중복이 발생하지 않을까? 고민을 하였지만
+만약 Company가 가지는 Country, Region에 대해 지역을 한정하게 되면 안될 것 같아 Company가 Post를 작성할때 추가하도록 하는 방법으로 진행하였습니다.

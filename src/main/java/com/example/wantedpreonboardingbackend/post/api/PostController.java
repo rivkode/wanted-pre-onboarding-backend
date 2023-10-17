@@ -50,7 +50,7 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostResponse>> deletePost(@PathVariable("postId") Long postId) {
         // soft delete로 변경
         PostResponse postResponse = postService.deletePost(postId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(success(SuccessCode.DELETE_POST, postResponse));
+        return ResponseEntity.status(HttpStatus.OK).body(success(SuccessCode.DELETE_POST, postResponse));
     }
 
     @GetMapping(value = "/post/list")
