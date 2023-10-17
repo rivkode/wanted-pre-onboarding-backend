@@ -3,7 +3,7 @@ package com.example.wantedpreonboardingbackend.post.api;
 
 import static org.mockito.ArgumentMatchers.any;
 
-import com.example.wantedpreonboardingbackend.post.domain.Post;
+import com.example.wantedpreonboardingbackend.post.domain.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,8 +72,8 @@ public class PostControllerTest {
     void createPostTest() throws Exception {
         User user100 = new User(100L, "이종훈", "spring", "백엔드");
         Company company100 = new Company(100L, "wanted", Scale.STARTUP);
-        CreatePostRequest request = new CreatePostRequest("백엔드 개발자 모집합니다", "백엔드 주니어 개발자", 10000,
-                "Spring", "한국", "서울", 100L);
+        CreatePostRequest request = new CreatePostRequest("백엔드 개발자 모집합니다", Position.데브옵스개발자, 10000,
+                Skills.MYSQL, Country.미국, Region.도쿄, 100L);
         Gson gson = new Gson();
         ObjectMapper objectMapper = new ObjectMapper();
         String content = gson.toJson(request);
@@ -82,7 +82,7 @@ public class PostControllerTest {
         log.info(">> request : {}", request);
         Post post = request.toEntity(company100);
 
-        given(postService.createPost(any(Company.class), any(CreatePostRequest.class))).willReturn(CREATE_POST);
+//        given(postService.createPost(any(Company.class), any(CreatePostRequest.class))).willReturn(CREATE_POST);
 
         log.info(">> after service given");
 

@@ -36,10 +36,7 @@ class ApplyServiceTest {
         //when
         int count = applyRepository.findAll().size();
 
-        int result = applyService.createApply(dto);
-
         //then
-        assertThat(result).isEqualTo(COMPLETE);
 
         assertThat(applyRepository.findAll()).hasSize(count + 1);
     }

@@ -3,11 +3,10 @@ package com.example.wantedpreonboardingbackend.post.application;
 import com.example.wantedpreonboardingbackend.company.Company;
 import com.example.wantedpreonboardingbackend.company.Scale;
 import com.example.wantedpreonboardingbackend.post.dao.PostRepository;
-import com.example.wantedpreonboardingbackend.post.domain.Post;
+import com.example.wantedpreonboardingbackend.post.domain.*;
 import com.example.wantedpreonboardingbackend.post.dto.request.CreatePostRequest;
 import com.example.wantedpreonboardingbackend.post.dto.request.UpdatePostRequest;
 import com.example.wantedpreonboardingbackend.post.dto.response.PostResponse;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -34,14 +32,13 @@ class PostServiceTest {
     private PostRepository postRepository;
 
     private final String TEST_CONTENT = "원티드랩에서 채용공고를 시행";
-    private final String TEST_POSITION = "백엔드 주니어 개발자";
+    private final Position TEST_POSITION = Position.백엔드개발자;
     private final int TEST_REWARD = 1000000;
-    private final String TEST_SKILLS = "python";
-    private final String TEST_COUNTRY = "한국";
-    private final String TEST_REGION = "서울";
+    private final Skills TEST_SKILLS = Skills.자바;
+    private final Country TEST_COUNTRY = Country.한국;
+    private final Region TEST_REGION = Region.서울;
     private final Long TEST_COMPANY_ID = 1L;
     private final Long TEST_POST_ID = 1L;
-    private final int COMPLETE = 0;
 
     @BeforeEach
     void setUp() {
@@ -61,11 +58,9 @@ class PostServiceTest {
         //when
         int count = postRepository.findAll().size();
 
-        int result = postService.createPost(company, request);
+        postService.createPost(company, request);
 
         //then
-        assertThat(result).isEqualTo(COMPLETE);
-
         assertThat(postRepository.findAll()).hasSize(count + 1);
     }
 
@@ -80,11 +75,11 @@ class PostServiceTest {
         );
 
         //when
-        int result = postService.updatePost(request);
+        postService.updatePost(request);
+
         Optional<Post> updatedPost = postRepository.findById(request.getPostId());
 
         //then
-        assertThat(result).isEqualTo(COMPLETE);
 
         assertThat(updatedPost.get().getContent()).isEqualTo(updateContent);
     }
