@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Where(clause = "is_deleted = false")
-@SQLDelete(sql = "UPDATE user SET isDeleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE post_id = ?")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -90,23 +90,20 @@ public class PostService {
     }
 
     public List<PostResponse> searchAllPosts(String search) {
-        try {
-            List<PostResponse> postResponseList = new ArrayList<>();
+        List<PostResponse> postResponseList = new ArrayList<>();
 
-            // 동적으로 query 생성
-            Specification<Post> spec = this.search(search);
+        // 동적으로 query 생성
+        Specification<Post> spec = this.search(search);
 
-            List<Post> posts = postRepository.findAll(spec);
+        log.info(">> spec : {}", spec);
 
-            // Post 객체를 PostResponse로 변환
-            for (Post p : posts) {
-                postResponseList.add(PostResponse.from(p));
-            }
-            return postResponseList;
-        } catch (Exception e) {
-            log.error("searchAllPosts {}", e.getMessage());
-            throw new CustomException(ErrorCode.SERVER_ERROR);
+        List<Post> posts = postRepository.findAll(spec);
+
+        // Post 객체를 PostResponse로 변환
+        for (Post p : posts) {
+            postResponseList.add(PostResponse.from(p));
         }
+        return postResponseList;
     }
 
     public Specification<Post> search(String keyword) {
@@ -124,20 +121,21 @@ public class PostService {
                     return cb.or(
                             // join한 table을 통해 name column 검색
                             cb.like(company.get("name"), "%" + keyword + "%"),
-                            cb.like(post.get("position"), "%" + keyword + "%"),
-                            cb.like(post.get("reward"), "%" + keywordInt + "%"),
-                            cb.like(post.get("skills"), "%" + keyword + "%"),
-                            cb.like(post.get("country"), "%" + keyword + "%"),
-                            cb.like(post.get("region"), "%" + keyword + "%")
+                            cb.like(post.get("position").as(String.class), "%" + keyword + "%"),
+                            cb.like(post.get("reward").as(String.class), "%" + keywordInt + "%"),
+                            cb.like(post.get("skills").as(String.class), "%" + keyword + "%"),
+                            cb.like(post.get("country").as(String.class), "%" + keyword + "%"),
+                            cb.like(post.get("region").as(String.class), "%" + keyword + "%")
                     );
                 } catch (Exception e) {
+                    log.info("toPredicate {}", e.getMessage());
                     return cb.or(
                             // join한 table을 통해 name column 검색
                             cb.like(company.get("name"), "%" + keyword + "%"),
-                            cb.like(post.get("position"), "%" + keyword + "%"),
-                            cb.like(post.get("skills"), "%" + keyword + "%"),
-                            cb.like(post.get("country"), "%" + keyword + "%"),
-                            cb.like(post.get("region"), "%" + keyword + "%")
+                            cb.like(post.get("position").as(String.class), "%" + keyword + "%"),
+                            cb.like(post.get("skills").as(String.class), "%" + keyword + "%"),
+                            cb.like(post.get("country").as(String.class), "%" + keyword + "%"),
+                            cb.like(post.get("region").as(String.class), "%" + keyword + "%")
                     );
                 }
 
