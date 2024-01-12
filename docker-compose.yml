@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  database:
+    container_name: preonb_db
+    image: mysql:8.0.22
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: root
+      TZ: 'Asia/Seoul'
+    ports:
+      - "13306:3306"
+    volumes:
+      - ./mysql/conf.d:/etc/mysql/conf.d
+    command:
+      - "mysqld"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    networks:
+      - preon_net
+
+  application:
+    container_name: preonb
+    image: preonb:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://preonb_db:3306/test_db?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+    depends_on:
+      - database
+    networks:
+      - preon_net
+
+networks:
+  preon_net: {}
