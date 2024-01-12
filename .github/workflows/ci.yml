@@ -59,11 +59,11 @@ jobs:
     - name: Start MySQL
       uses: samin/mysql-action@v1.3
       with:
-        host port: 3305
-        container port: 3305
-        mysql database: '{database name}'
-        mysql user: '{database user}'
-        mysql password: '{database pwd}'
+        host port: 13306
+        container port: 3306
+        mysql database: 'test_db'
+        mysql user: 'root'
+        mysql password: 'root'
 
     - name: Make application-test.properties
       run: |
