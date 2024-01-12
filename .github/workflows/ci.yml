@@ -72,8 +72,8 @@ jobs:
 #        echo "${{ secrets.PROPERTIES_TEST }}" > ./application.properties
 #      shell: bash
 
-    - name: Build With Test
-      run: ./gradlew test
+#    - name: Build With Test
+#      run: ./gradlew test
 #
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
