@@ -1,5 +1,6 @@
 package com.example.wantedpreonboardingbackend.user;
 
+import com.example.wantedpreonboardingbackend.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +9,16 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User getUser(Long userId) {
-        return userRepository.findById(userId).get();
+    public UserDto getUser(Long userId) {
+        return UserDto.from(userRepository.findById(userId).get());
+    }
+
+    public void createUser() {
+        User user = User.builder()
+                .username("username")
+                .skills("skills")
+                .position("position")
+                .build();
+        userRepository.save(user);
     }
 }
