@@ -16,7 +16,7 @@ public class UserController {
     @PostMapping("/user")
     public String createUser() {
         userService.createUser();
-        return "success";
+        return "success user";
     }
 
     @GetMapping("/user/{userId}")
