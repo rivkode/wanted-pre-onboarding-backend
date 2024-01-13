@@ -44,13 +44,13 @@ jobs:
       #   shell: bash
 
       - name: Build With Gradle
-        run: ./gradlew build -x test
+        run: sudo ./gradlew build -x test
 
       - name: Docker build & Push
         run: |
-          docker login -u ${{ secrets.DOCKER_ID }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/preonb .
-          docker push ${{ secrets.DOCKER_REPO }}/preonb
+          sudo docker login -u ${{ secrets.DOCKER_ID }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/preonb .
+          sudo docker push ${{ secrets.DOCKER_REPO }}/preonb
 
       - name: Deploy Images with Docker compose
         uses: appleboy/ssh-action@master
