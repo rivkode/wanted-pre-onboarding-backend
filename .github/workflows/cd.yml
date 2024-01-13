@@ -42,9 +42,11 @@ jobs:
       #     touch ./application-prod.properties
       #     echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.properties
       #   shell: bash
+      - name: Grant Execute Permission For Gradlew
+        run: chmod +x gradlew
 
       - name: Build With Gradle
-        run: sudo ./gradlew build -x test
+        run: ./gradlew build -x test
 
       - name: Docker build & Push
         run: |
