@@ -32,13 +32,8 @@ services:
     ports:
       - "8080:8080"
     restart: on-failure
-    environment:
-#      SPRING_DATASOURCE_URL: jdbc:mysql://preonb_db:3306/test_db?useSSL=false&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_URL: jdbc:mysql://db-instance-synergy.cn6oq0g93zz1.ap-northeast-2.rds.amazonaws.com:3306/test_db?useSSL=false&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: "${{ secrets.RDS_USERNAME }}"
-      SPRING_DATASOURCE_PASSWORD: "${{ secrets.RDS_PASSWORD }}"
-#    depends_on:
-#      - database
+    env_file:
+      - .env
     networks:
       - preon_net
 

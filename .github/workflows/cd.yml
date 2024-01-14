@@ -25,6 +25,14 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
+      ## create application-database.yaml
+      - name: make application-database.yaml
+        run: |
+          cd ./src/main/resources
+          touch ./application-database.yaml
+          echo "${{ secrets.DATABASE }}" >> ./application-database.yaml
+        shell: bash
+
       - name: Gradle Caching
         uses: actions/cache@v3
         with:
@@ -69,15 +77,3 @@ jobs:
             sudo docker-compose -f $COMPOSE down
             sudo docker pull ${{ secrets.DOCKER_REPO }}/preonb
             sudo docker-compose -f $COMPOSE up -d
-#        id: deploy-prod
-#        with:
-#          host: ${{ secrets.EC2_HOST }}
-#          username: ubuntu
-#          key: ${{ secrets.EC2_PRIVATE_KEY }}
-#          envs: GITHUB_SHA
-#          script: |
-#             sudo docker stop preonb
-#             sudo docker rm -f $(docker ps -qa)
-#             sudo docker pull ${{ secrets.DOCKER_REPO }}/preonb
-#             sudo docker-compose up -d
-#             sudo docker image prune -f

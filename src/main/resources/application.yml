@@ -23,6 +23,9 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  config:
+    activate:
+      on-profile: database
 
 swagger:
   base-package: com.example.wantedpreonboardingbackend
