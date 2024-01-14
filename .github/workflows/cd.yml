@@ -26,11 +26,11 @@ jobs:
           distribution: 'temurin'
 
       ## create application-database.yaml
-      - name: make application-database.yaml
+      - name: make application-database.yml
         run: |
           cd ./src/main/resources
-          touch ./application-database.yaml
-          echo "${{ secrets.DATABASE }}" >> ./application-database.yaml
+          touch ./application-database.yml
+          echo "${{ secrets.DATABASE }}" >> ./application-database.yml
         shell: bash
 
       - name: Gradle Caching
@@ -42,14 +42,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      # ### CD
-      # #배포를 위한 prod properties 설정
-      # - name: Make application-prod.properties
-      #   run: |
-      #     cd ./src/main/resources
-      #     touch ./application-prod.properties
-      #     echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.properties
-      #   shell: bash
+
       - name: Grant Execute Permission For Gradlew
         run: chmod +x gradlew
 

@@ -24,4 +24,9 @@ public class UserController {
         return userService.getUser(userId);
     }
 
+    @GetMapping("/user/hello")
+    public String helloUser() {
+        return "hello User";
+    }
+
 }
