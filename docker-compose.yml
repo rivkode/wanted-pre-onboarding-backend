@@ -25,10 +25,10 @@ services:
 
   application:
     container_name: preonb
-    image: preonb:latest
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: jonghuni/preonb:latest
+#    build:
+#      context: ./
+#      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     restart: on-failure
