@@ -26,7 +26,7 @@ public class UserController {
 
     @GetMapping("/user/hello")
     public String helloUser() {
-        return "hello 074";
+        return "user hello 1149";
     }
 
 }
